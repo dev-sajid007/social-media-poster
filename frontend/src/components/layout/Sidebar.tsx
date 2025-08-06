@@ -19,18 +19,23 @@ interface NavigationItem {
   current: boolean;
 }
 
-const navigation: NavigationItem[] = [
-  { name: 'Dashboard', href: '/', icon: HomeIcon, current: true },
-  { name: 'Compose Post', href: '/compose', icon: PencilSquareIcon, current: false },
-  { name: 'Media Library', href: '/media', icon: PhotoIcon, current: false },
-  { name: 'Analytics', href: '/analytics', icon: ChartBarIcon, current: false },
-  { name: 'Accounts', href: '/accounts', icon: UserGroupIcon, current: false },
-  { name: 'Templates', href: '/templates', icon: DocumentDuplicateIcon, current: false },
-  { name: 'Settings', href: '/settings', icon: Cog6ToothIcon, current: false },
-];
+interface SidebarProps {
+  currentPage: string;
+  onNavigate: (page: string) => void;
+}
 
-export const Sidebar: React.FC = () => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navigation: NavigationItem[] = [
+    { name: 'Dashboard', href: 'dashboard', icon: HomeIcon, current: currentPage === 'dashboard' },
+    { name: 'Compose Post', href: 'compose', icon: PencilSquareIcon, current: currentPage === 'compose' },
+    { name: 'Media Library', href: 'media', icon: PhotoIcon, current: currentPage === 'media' },
+    { name: 'Analytics', href: 'analytics', icon: ChartBarIcon, current: currentPage === 'analytics' },
+    { name: 'Accounts', href: 'accounts', icon: UserGroupIcon, current: currentPage === 'accounts' },
+    { name: 'Templates', href: 'templates', icon: DocumentDuplicateIcon, current: currentPage === 'templates' },
+    { name: 'Settings', href: 'settings', icon: Cog6ToothIcon, current: currentPage === 'settings' },
+  ];
 
   return (
     <>
@@ -75,11 +80,14 @@ export const Sidebar: React.FC = () => {
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => (
-              <a
+              <button
                 key={item.name}
-                href={item.href}
+                onClick={() => {
+                  onNavigate(item.href);
+                  setIsMobileMenuOpen(false);
+                }}
                 className={cn(
-                  'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200',
+                  'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 w-full text-left',
                   item.current
                     ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-500'
                     : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
@@ -93,7 +101,7 @@ export const Sidebar: React.FC = () => {
                   aria-hidden="true"
                 />
                 {item.name}
-              </a>
+              </button>
             ))}
           </nav>
 

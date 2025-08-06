@@ -10,7 +10,10 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
-import { PostComposer } from '../components/forms/PostComposer';
+
+interface DashboardProps {
+  onNavigate: (page: string) => void;
+}
 
 interface QuickStatProps {
   title: string;
@@ -79,7 +82,7 @@ const upcomingPosts = [
   { time: 'Friday, 2:00 PM', content: 'Weekend special offer', platforms: ['Facebook', 'WhatsApp'] }
 ];
 
-export const Dashboard: React.FC = () => {
+export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const [showComposer, setShowComposer] = React.useState(false);
 
   return (
@@ -90,7 +93,7 @@ export const Dashboard: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-500">Welcome back! Here's what's happening with your social media.</p>
         </div>
-        <Button onClick={() => setShowComposer(true)}>
+        <Button onClick={() => onNavigate('compose')}>
           <PlusIcon className="h-4 w-4 mr-2" />
           Create Post
         </Button>
@@ -207,7 +210,9 @@ export const Dashboard: React.FC = () => {
                 </div>
               ))}
               <div className="text-center pt-3">
-                <Button variant="outline" size="sm">Manage Accounts</Button>
+                <Button variant="outline" size="sm" onClick={() => onNavigate('accounts')}>
+                  Manage Accounts
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -248,19 +253,19 @@ export const Dashboard: React.FC = () => {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button variant="outline" className="w-full justify-start" onClick={() => setShowComposer(true)}>
+              <Button variant="outline" className="w-full justify-start" onClick={() => onNavigate('compose')}>
                 <PlusIcon className="h-4 w-4 mr-2" />
                 Create New Post
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="outline" className="w-full justify-start" onClick={() => onNavigate('media')}>
                 <PhotoIcon className="h-4 w-4 mr-2" />
                 Upload Media
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="outline" className="w-full justify-start" onClick={() => onNavigate('analytics')}>
                 <ChartBarIcon className="h-4 w-4 mr-2" />
                 View Analytics
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="outline" className="w-full justify-start" onClick={() => onNavigate('accounts')}>
                 <UserGroupIcon className="h-4 w-4 mr-2" />
                 Manage Accounts
               </Button>
@@ -268,31 +273,6 @@ export const Dashboard: React.FC = () => {
           </Card>
         </div>
       </div>
-
-      {/* Post Composer Modal */}
-      {showComposer && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" 
-                 onClick={() => setShowComposer(false)} />
-            <div className="inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-medium text-gray-900">Create New Post</h3>
-                <button
-                  onClick={() => setShowComposer(false)}
-                  className="text-gray-400 hover:text-gray-500 focus:outline-none"
-                >
-                  <span className="sr-only">Close</span>
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <PostComposer />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

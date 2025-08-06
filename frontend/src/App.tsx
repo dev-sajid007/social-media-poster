@@ -6,15 +6,19 @@ import { AccountManagement } from './components/forms/AccountManagement';
 import { MediaLibrary } from './components/forms/MediaLibrary';
 import { AnalyticsDashboard } from './components/charts/AnalyticsDashboard';
 
-type PageType = 'dashboard' | 'compose' | 'media' | 'analytics' | 'accounts';
+type PageType = 'dashboard' | 'compose' | 'media' | 'analytics' | 'accounts' | 'templates' | 'settings';
 
 function App() {
-  const [currentPage] = useState<PageType>('dashboard');
+  const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
+
+  const handleNavigate = (page: string) => {
+    setCurrentPage(page as PageType);
+  };
 
   const renderPage = () => {
     switch (currentPage) {
       case 'dashboard':
-        return <Dashboard />;
+        return <Dashboard onNavigate={handleNavigate} />;
       case 'compose':
         return (
           <div className="max-w-4xl mx-auto">
@@ -31,13 +35,27 @@ function App() {
         return <AnalyticsDashboard />;
       case 'accounts':
         return <AccountManagement />;
+      case 'templates':
+        return (
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Templates</h1>
+            <p className="text-gray-500">Manage your post templates (Coming Soon)</p>
+          </div>
+        );
+      case 'settings':
+        return (
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Settings</h1>
+            <p className="text-gray-500">Configure your application settings (Coming Soon)</p>
+          </div>
+        );
       default:
-        return <Dashboard />;
+        return <Dashboard onNavigate={handleNavigate} />;
     }
   };
 
   return (
-    <MainLayout>
+    <MainLayout currentPage={currentPage} onNavigate={handleNavigate}>
       {renderPage()}
     </MainLayout>
   );
